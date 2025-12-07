@@ -65,12 +65,6 @@ The system helps clinicians make informed decisions about treatment protocols an
 - **Feature Scaling**: Normalization for optimal performance
 
 
-## 🔄 Pipeline Architecture
-
-### Complete ML Pipeline
-
-![ML Pipeline](images/pipeline_architecture.png)
-*End-to-end machine learning pipeline from data extraction to deployment*
 
 ### Pipeline Components
 
