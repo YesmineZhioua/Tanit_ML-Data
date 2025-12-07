@@ -1,0 +1,258 @@
+{
+  "informations_patient": {
+    "nom": "Amira  L",
+    "protocol": "Flex Antago",
+    "birth_date": "27/11/ 95"
+  },
+  "biomarqueurs": {
+    "AMH": "3.64",
+    "AFC": null
+  },
+  "cycle_number": "2nd",
+  "tableau_suivi": [
+    {
+      "J": "1",
+      "Date": "2/10/25",
+      "Ménopur": "225UI",
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "2",
+      "Date": "//",
+      "Ménopur": null,
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "3",
+      "Date": "//",
+      "Ménopur": null,
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "4",
+      "Date": "//",
+      "Ménopur": null,
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "5",
+      "Date": "6/10",
+      "Ménopur": "//",
+      "Anta": null,
+      "E2": "350",
+      "LH": "3.5\n1",
+      "Pg": "11",
+      "Right Ovary": "/ 10.5 / 10",
+      "Left Ovar y": "11. 5 / 9",
+      "End\no": null
+    },
+    {
+      "J": "6",
+      "Date": "//",
+      "Ménopur": null,
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "7",
+      "Date": "//",
+      "Ménopur": "/",
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "8",
+      "Date": "9/10",
+      "Ménopur": "//",
+      "Anta": "/",
+      "E2": "943",
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": "2*14 / 13 / 8",
+      "Left Ovar y": "13 / 14",
+      "End\no": "10.7"
+    },
+    {
+      "J": "9",
+      "Date": "//",
+      "Ménopur": "/",
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "1\n0",
+      "Date": "//",
+      "Ménopur": "/",
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "\n1\n1",
+      "Date": "12/10",
+      "Ménopur": "//",
+      "Anta": "/",
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": "17.5 / 16.5 / \n16 / 14 / 13",
+      "Left Ovar y": "19 / 15 / 14\n/ 12",
+      "End\no": "9.8"
+    },
+    {
+      "J": "\n1\n2",
+      "Date": "13/10",
+      "Ménopur": "Ovitrelle",
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "\n1\n3",
+      "Date": null,
+      "Ménopur": null,
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "\n1\n4",
+      "Date": null,
+      "Ménopur": null,
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "\n1\n5",
+      "Date": null,
+      "Ménopur": null,
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "\n1\n6",
+      "Date": null,
+      "Ménopur": null,
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "\n1\n7",
+      "Date": null,
+      "Ménopur": null,
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "\n1\n8",
+      "Date": null,
+      "Ménopur": null,
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "\n1\n9",
+      "Date": null,
+      "Ménopur": null,
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    },
+    {
+      "J": "\n2\n0",
+      "Date": null,
+      "Ménopur": null,
+      "Anta": null,
+      "E2": null,
+      "LH": null,
+      "Pg": null,
+      "Right Ovary": null,
+      "Left Ovar y": null,
+      "End\no": null
+    }
+  ],
+  "autres_informations": {
+    "number_of_follicles": "9",
+    "response": "The patient  has an optimal -response"
+  }
+}
