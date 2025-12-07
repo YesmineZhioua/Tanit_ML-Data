@@ -13,7 +13,6 @@
 
 - [Overview](#-overview)
 - [Features](#-features)
-- [Screenshots](#-screenshots)
 - [Pipeline Architecture](#-pipeline-architecture)
 - [Project Structure](#-project-structure)
 - [Installation](#-installation)
@@ -51,7 +50,6 @@ The system helps clinicians make informed decisions about treatment protocols an
 ### 🖥️ User Interface
 - **Single Patient Prediction**: Real-time predictions with confidence scores
 - **Batch Analysis**: Process multiple patients from CSV files
-- **Interactive Visualizations**: Plotly charts for probability distributions
 - **Professional Design**: Clean, medical-grade interface
 
 ### 🔌 REST API
@@ -66,35 +64,6 @@ The system helps clinicians make informed decisions about treatment protocols an
 - **Anonymization**: De-identify patient information
 - **Feature Scaling**: Normalization for optimal performance
 
----
-
-## 📸 Screenshots
-
-### Main Interface
-![Main Interface](images/main_interface.png)
-*Clean and professional user interface for patient data input*
-
-### Single Patient Prediction
-![Single Prediction](images/single_prediction.png)
-*Real-time prediction with confidence scores and probability distribution*
-
-### Prediction Results
-![Results](images/prediction_results.png)
-*Detailed results with clinical interpretation and recommendations*
-
-### Batch Analysis
-![Batch Analysis](images/batch_analysis.png)
-*Process multiple patients simultaneously with downloadable results*
-
-### Interactive Charts
-![Charts](images/interactive_charts.png)
-*Dynamic visualizations showing probability distributions and confidence metrics*
-
-### Model Information
-![Model Info](images/model_info.png)
-*Comprehensive model details and feature information*
-
----
 
 ## 🔄 Pipeline Architecture
 
@@ -219,23 +188,9 @@ The system helps clinicians make informed decisions about treatment protocols an
 │   │   └── app.py                    # Flask backend
 │   │
 │   └── ui/
-│       ├── __init__.py
 │       └── streamlit_app.py          # Streamlit interface
 │
-├── images/                            # Screenshots and diagrams
-│   ├── main_interface.png
-│   ├── single_prediction.png
-│   ├── prediction_results.png
-│   ├── batch_analysis.png
-│   ├── interactive_charts.png
-│   ├── model_info.png
-│   └── pipeline_architecture.png
-│
-└── docs/
-    ├── report.pdf                    # Technical report
-    ├── presentation.pdf              # Project presentation
-    └── video_demo.mp4                # Video demonstration
-```
+
 
 ---
 
@@ -554,7 +509,7 @@ The model achieves strong performance across all evaluation metrics:
 
 ### Technical Report
 
-A comprehensive technical report is available in [`docs/report.pdf`](docs/report.pdf) covering:
+A comprehensive technical report is available in (./Rapport_Tanit_ML_Data.pdf) covering:
 
 - **Problem Statement**: Clinical motivation and objectives
 - **Dataset Description**: Data sources and characteristics
@@ -566,7 +521,7 @@ A comprehensive technical report is available in [`docs/report.pdf`](docs/report
 
 ### Presentation
 
-Project presentation slides available in [`docs/presentation.pdf`](docs/presentation.pdf)
+Project presentation slides available in ()
 
 ### Video Demonstration
 
@@ -593,6 +548,7 @@ Contributions are welcome! Please follow these steps:
 ## 📧 Contact
 
 **Yesmine Zhioua**
+- Linkedin : [https://www.linkedin.com/in/yesmine-zhioua/]
 - GitHub: [@YesmineZhioua](https://github.com/YesmineZhioua)
 - Project Link: [https://github.com/YesmineZhioua/Tanit_ML-Data](https://github.com/YesmineZhioua/Tanit_ML-Data)
 
@@ -616,7 +572,7 @@ Contributions are welcome! Please follow these steps:
 - **Visualization:** plotly, matplotlib, seaborn
 - **API:** Flask
 - **UI:** Streamlit
-- **PDF Processing:** PyPDF2, pdfplumber
+- **PDF Processing:** PyPDF2, pdfplumber ,Google Gemini 2.0 AI
 - **Explainability:** SHAP, LIME
 
 
@@ -628,15 +584,8 @@ Future enhancements planned:
 - [ ] Implement deep learning models
 - [ ] Deploy to cloud platform (AWS/Azure/GCP)
 - [ ] Add real-time monitoring dashboard
-- [ ] Integrate with Electronic Health Records (EHR)
-- [ ] Multi-language support
 - [ ] Advanced explainability features
 
----
-
-<p align="center">
-  <img src="images/logo.png" alt="Project Logo" width="200"/>
-</p>
 
 <p align="center">
   Made with ❤️ for better IVF outcomes
