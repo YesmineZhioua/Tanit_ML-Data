@@ -7,6 +7,7 @@ import streamlit as st
 import requests
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.express as px
 
 
 # -------------------------------------------------------------------------
@@ -97,6 +98,24 @@ st.markdown("""
         line-height: 1.6;
     }
     
+    /* Pipeline Card */
+    .pipeline-card {
+        background: #ffffff;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 2px solid #bccefb;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .pipeline-step {
+        background: linear-gradient(135deg, #f8f9ff 0%, #fdf8ff 100%);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border-left: 3px solid #d094ea;
+    }
+    
     /* Metrics */
     div[data-testid="metric-container"] {
         background: linear-gradient(135deg, #bccefb 0%, #d094ea 100%);
@@ -162,6 +181,14 @@ st.markdown("""
         border-bottom: 2px solid #d094ea;
         margin-bottom: 1.5rem;
     }
+    
+    /* Expander */
+    .streamlit-expanderHeader {
+        background-color: #f8f9ff;
+        border-radius: 8px;
+        color: #000000;
+        font-weight: 600;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -215,12 +242,14 @@ if not st.session_state.logged_in:
 # -------------------------------------------------------------------------
 # 🔵 NAVIGATION
 # -------------------------------------------------------------------------
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 with col1:
     btn_single = st.button("👤 Prédiction Individuelle", use_container_width=True)
 with col2:
     btn_batch = st.button("📊 Prédiction par Lot", use_container_width=True)
 with col3:
+    btn_pipeline = st.button("🔬 Pipeline ML", use_container_width=True)
+with col4:
     btn_info = st.button("ℹ️ Informations Modèle", use_container_width=True)
 
 if "page" not in st.session_state:
@@ -230,6 +259,8 @@ if btn_single:
     st.session_state.page = "Single"
 elif btn_batch:
     st.session_state.page = "Batch"
+elif btn_pipeline:
+    st.session_state.page = "Pipeline"
 elif btn_info:
     st.session_state.page = "Info"
 
@@ -422,7 +453,97 @@ def main():
                 st.download_button("📥 Télécharger les Résultats", clean.to_csv(index=False), "predictions.csv")
 
     # ---------------------------------------------------------
-    # PAGE 3 — INFORMATIONS MODÈLE
+    # PAGE 3 — PIPELINE ML
+    # ---------------------------------------------------------
+    # ---------------------------------------------------------
+# PAGE 3 — PIPELINE ML (Cartes)
+# ---------------------------------------------------------
+    elif page == "Pipeline":
+        st.subheader("🔬 Pipeline Machine Learning Complet")
+
+        st.markdown("""
+                <style>
+            .pipeline-card {
+                border-radius: 12px;
+                padding: 20px;
+                margin: 15px 0;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                font-family: 'Arial', sans-serif;
+                color: #000000;  /* texte noir pour un maximum de lisibilité */
+            }
+            .phase-1 { background-color: #E3E9FF; border-left: 6px solid #4C63D2; }  /* fond plus clair */
+            .phase-2 { background-color: #FFE3EC; border-left: 6px solid #E91E63; }
+            .phase-3 { background-color: #E0F9FF; border-left: 6px solid #00ACC1; }
+            .phase-4 { background-color: #E8FFE8; border-left: 6px solid #43A047; }
+            .card-title { font-weight: bold; font-size: 18px; margin-bottom: 10px; color: #000; }
+            .card-content { font-size: 14px; line-height: 1.6; color: #000; }
+            </style>
+
+        """, unsafe_allow_html=True)
+
+        # PHASE 1 - Extraction
+        st.markdown("""
+        <div class="pipeline-card phase-1">
+            <div class="card-title">📄 PHASE 1: Extraction des Données PDF</div>
+            <div class="card-content">
+                <ul>
+                    <li><b>PDF Médical</b> : sample.pdf (PyPDF2)</li>
+                    <li><b>Gemini 2.0 AI</b> : Extraction tableaux, structuration JSON, validation</li>
+                    <li><b>JSON Structuré</b> : Patient info + biomarqueurs</li>
+                    <li><b>CSV Intégré</b> : ivf_data.csv + nouvelle ligne patient</li>
+                </ul>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # PHASE 2 - EDA
+        st.markdown("""
+        <div class="pipeline-card phase-2">
+            <div class="card-title">📊 PHASE 2: Analyse Exploratoire (EDA)</div>
+            <div class="card-content">
+                <ul>
+                    <li>Données brutes : 9 variables, valeurs manquantes, outliers</li>
+                    <li>Analyses statistiques : distributions, corrélations, boxplots</li>
+                    <li>Insights médicaux : impact âge sur réponse, AMH vs N_Follicles, patterns</li>
+                    <li>Visualisations : 6 graphiques EDA (matplotlib, seaborn)</li>
+                </ul>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # PHASE 3 - Nettoyage & Preprocessing
+        st.markdown("""
+        <div class="pipeline-card phase-3">
+            <div class="card-title">🧹 PHASE 3: Nettoyage & Preprocessing</div>
+            <div class="card-content">
+                <ul>
+                    <li>Valeurs manquantes : imputation médiane, AFC, vérification qualité</li>
+                    <li>Normalisation : RobustScaler, variables numériques, gestion outliers</li>
+                    <li>Encodage : protocoles 0,1,2, suppression doublons, validation finale</li>
+                    <li>Données nettoyées : cleaned_data.csv, 0 valeurs manquantes, normalisées</li>
+                </ul>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # PHASE 4 - Modélisation
+        st.markdown("""
+        <div class="pipeline-card phase-4">
+            <div class="card-title">🤖 PHASE 4: Entraînement & Sélection Modèles</div>
+            <div class="card-content">
+                <ul>
+                    <li>Split données : Train 80%, Validation 10%, Test 10%</li>
+                    <li>5 Modèles : Logistic Regression, Random Forest, Gradient Boosting, AdaBoost, SVC</li>
+                    <li>Optimisation : GridSearchCV, score F1-pondéré, sauvegarde .pkl, historique .json</li>
+                    <li>Sélection best model : accuracy, précision pondérée, recall pondéré, F1-score pondéré → best_model.pkl</li>
+                </ul>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+
+    # ---------------------------------------------------------
+    # PAGE 4 — INFORMATIONS MODÈLE
     # ---------------------------------------------------------
     else:
         st.subheader("ℹ️ Informations sur le Modèle")

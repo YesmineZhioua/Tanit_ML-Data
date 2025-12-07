@@ -316,12 +316,12 @@ def main():
 
     # Single patient example - utilisez les noms de colonnes ORIGINAUX
     patient_data = {
-        'Age': 24,
+        'Age': 29,
         'Cycle_number': 1,
         'Protocol': 'flex anta',
-        'AMH': 1.81,
-        'N_Follicles': 18,
-        'E2_day5': 351.81,
+        'AMH': 5.62,
+        'N_Follicles': 15,
+        'E2_day5': 699.82,
         'AFC': 17
     }
     
