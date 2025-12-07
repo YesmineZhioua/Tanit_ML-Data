@@ -429,16 +429,41 @@ class IVFMedicalDataCleaner:
         
         print(f"✓ Normalisation RobustScaler appliquée")
         
-        # 6. Encodage Protocol
         if 'Protocol' in df.columns:
-            protocol_mapping = {
-                'agonist': 0,
-                'fixed antagonist': 1,
-                'flexible antagonist': 2
-            }
-            df['Protocol_encoded'] = df['Protocol'].map(protocol_mapping)
-            print(f"✓ Protocol encodé")
-        
+    # Nettoyage : minuscules + suppression espaces superflus
+                df['Protocol_clean'] = df['Protocol'].astype(str).str.strip().str.lower()
+
+                # Extraire tous les types uniques
+                unique_protocols = df['Protocol_clean'].unique()
+                print("🔹 Protocoles uniques trouvés :", unique_protocols)
+
+                # Créer des listes pour les 3 catégories
+                agonist_list = [p for p in unique_protocols if 'agonist' in p and 'flex' not in p and 'fix' not in p]
+                flexible_antagonist_list = [p for p in unique_protocols if 'flex' in p]
+                fixed_antagonist_list = [p for p in unique_protocols if 'fix' in p]
+
+                print("Agonist :", agonist_list)
+                print("Flexible Antagonist :", flexible_antagonist_list)
+                print("Fixed Antagonist :", fixed_antagonist_list)
+
+                # Création d'un dictionnaire de mapping automatique
+                protocol_mapping = {}
+                for p in agonist_list:
+                    protocol_mapping[p] = 0
+                for p in flexible_antagonist_list:
+                    protocol_mapping[p] = 1
+                for p in fixed_antagonist_list:
+                    protocol_mapping[p] = 2
+
+                # Encodage
+                df['Protocol_encoded'] = df['Protocol_clean'].map(protocol_mapping)
+
+                # Pour les valeurs inconnues, assigner -1
+                df['Protocol_encoded'].fillna(-1, inplace=True)
+
+                print(f"✓ Protocol encodé : valeurs uniques après encodage -> {df['Protocol_encoded'].unique()}")
+
+            
         # 7. Doublons
         duplicates = df.duplicated().sum()
         if duplicates > 0:

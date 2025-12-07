@@ -363,8 +363,7 @@ def extract_ivf_data_from_json(json_path):
     autres_info = data.get('autres_informations', {})
     
     # 1. Patient_id : Générer depuis le nom
-    csv_exists = Path("C:\\Users\\yesmine\\Desktop\\Tanit\\data\\raw\\patients.csv").exists()
-
+    csv_exists = Path(r"C:\Users\yesmine\Desktop\Tanit\data\raw\patients.csv").exists()
     if csv_exists:
       with open("C:\\Users\\yesmine\\Desktop\\Tanit\\data\\raw\\patients.csv", 'r', encoding='utf-8') as f:
         all_lines = f.readlines()

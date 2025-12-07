@@ -1,577 +1,444 @@
 """
 IVF Patient Response Prediction - Streamlit Interface
-====================================================
-Modern, attractive interface for patient response stratification
+Interface professionnelle et épurée avec palette personnalisée
 """
 
 import streamlit as st
 import requests
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.express as px
-from typing import Dict, Any
-import json
 
-# Configuration de la page
+
+# -------------------------------------------------------------------------
+# 🔧 PAGE CONFIG
+# -------------------------------------------------------------------------
 st.set_page_config(
-    page_title="IVF Response Predictor",
-    page_icon="🔬",
+    page_title="TanitAI HealthCare - IVF Predictor",
+    page_icon="💙",
     layout="wide",
-    initial_sidebar_state="expanded"
 )
 
-# CSS personnalisé pour un design moderne
+
+# -------------------------------------------------------------------------
+# 🎨 GLOBAL CSS - PALETTE: #d094ea, #bccefb, noir
+# -------------------------------------------------------------------------
 st.markdown("""
 <style>
-    /* Couleurs principales */
-    :root {
-        --primary: #2E86AB;
-        --secondary: #A23B72;
-        --success: #06D6A0;
-        --warning: #F77F00;
-        --danger: #EF476F;
+    /* Reset & Base */
+    .main {
+        background-color: #ffffff;
     }
     
-    /* En-tête principal */
-    .main-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 2rem;
-        border-radius: 15px;
+    /* Header */
+    .app-header {
+        background: linear-gradient(135deg, #bccefb 0%, #d094ea 100%);
+        padding: 2rem 2.5rem;
+        border-radius: 16px;
         margin-bottom: 2rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
     
-    .main-header h1 {
-        color: white;
-        font-size: 2.5rem;
-        margin: 0;
-        text-align: center;
+    .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        color: #000000;
+    }
+    
+    .header-title {
+        font-size: 2.2rem;
         font-weight: 700;
-    }
-    
-    .main-header p {
-        color: rgba(255,255,255,0.9);
-        text-align: center;
-        margin-top: 0.5rem;
-        font-size: 1.1rem;
-    }
-    
-    /* Cards */
-    .metric-card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        border-left: 4px solid var(--primary);
-        transition: transform 0.3s ease;
-    }
-    
-    .metric-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
-    
-    /* Prédiction result */
-    .prediction-result {
-        padding: 2rem;
-        border-radius: 15px;
-        margin: 1rem 0;
-        text-align: center;
-        font-size: 1.2rem;
-        font-weight: 600;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    }
-    
-    .low-response {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-    }
-    
-    .optimal-response {
-        background: linear-gradient(135deg, #06D6A0 0%, #1B998B 100%);
-        color: white;
-    }
-    
-    .high-response {
-        background: linear-gradient(135deg, #F77F00 0%, #D62828 100%);
-        color: white;
-    }
-    
-    /* Confidence meter */
-    .confidence-label {
-        font-size: 0.9rem;
-        color: #666;
+        color: #000000;
         margin-bottom: 0.5rem;
     }
     
-    /* Buttons */
-    .stButton>button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+    .header-subtitle {
+        font-size: 1.1rem;
+        color: #333333;
+        font-weight: 400;
+    }
+
+    /* Navigation */
+    .stButton > button {
+        background-color: #bccefb;
+        color: #000000;
         border: none;
-        padding: 0.75rem 2rem;
-        border-radius: 8px;
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
         font-weight: 600;
         font-size: 1rem;
         transition: all 0.3s ease;
-        width: 100%;
+        box-shadow: 0 2px 8px rgba(188,206,251,0.3);
     }
     
-    .stButton>button:hover {
+    .stButton > button:hover {
+        background-color: #d094ea;
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 4px 12px rgba(208,148,234,0.4);
     }
     
-    /* Info boxes */
-    .info-box {
-        background: #f8f9fa;
-        padding: 1rem;
-        border-radius: 8px;
-        border-left: 4px solid #667eea;
-        margin: 1rem 0;
-    }
-    
-    /* Sidebar styling */
-    .sidebar .sidebar-content {
-        background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
-    }
-    
-    /* Progress bar custom */
-    .custom-progress {
-        height: 25px;
+    /* Info Card */
+    .info-card {
+        background: linear-gradient(135deg, #f8f9ff 0%, #fdf8ff 100%);
+        padding: 1.5rem;
         border-radius: 12px;
-        background: #e0e0e0;
-        overflow: hidden;
-        margin: 0.5rem 0;
+        border-left: 4px solid #d094ea;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     
-    .custom-progress-bar {
-        height: 100%;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
+    .info-card h4 {
+        color: #000000;
+        margin-bottom: 1rem;
         font-weight: 600;
-        transition: width 0.6s ease;
+    }
+    
+    .info-card p, .info-card li {
+        color: #333333;
+        line-height: 1.6;
+    }
+    
+    /* Metrics */
+    div[data-testid="metric-container"] {
+        background: linear-gradient(135deg, #bccefb 0%, #d094ea 100%);
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    div[data-testid="metric-container"] label {
+        color: #000000 !important;
+        font-weight: 600;
+    }
+    
+    div[data-testid="metric-container"] [data-testid="stMetricValue"] {
+        color: #000000;
+        font-weight: 700;
+    }
+    
+    /* Input Fields */
+    .stNumberInput > div > div > input,
+    .stSelectbox > div > div > select {
+        border: 2px solid #bccefb;
+        border-radius: 8px;
+        color: #000000;
+    }
+    
+    .stNumberInput > div > div > input:focus,
+    .stSelectbox > div > div > select:focus {
+        border-color: #d094ea;
+        box-shadow: 0 0 0 2px rgba(208,148,234,0.2);
+    }
+    
+    /* Status Messages */
+    .stSuccess {
+        background-color: #e8f5e9;
+        border-left: 4px solid #4caf50;
+        color: #000000;
+    }
+    
+    .stError {
+        background-color: #ffebee;
+        border-left: 4px solid #f44336;
+        color: #000000;
+    }
+    
+    .stWarning {
+        background-color: #fff3e0;
+        border-left: 4px solid #ff9800;
+        color: #000000;
+    }
+    
+    .stInfo {
+        background-color: #e3f2fd;
+        border-left: 4px solid #bccefb;
+        color: #000000;
+    }
+    
+    /* Subheader */
+    .stSubheader {
+        color: #000000;
+        font-weight: 600;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #d094ea;
+        margin-bottom: 1.5rem;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Configuration API
+
+# -------------------------------------------------------------------------
+# 🔐 LOGIN / LOGOUT SYSTEM
+# -------------------------------------------------------------------------
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+def login():
+    st.session_state.logged_in = True
+
+def logout():
+    st.session_state.logged_in = False
+
+
+# -------------------------------------------------------------------------
+# 🔷 HEADER SECTION
+# -------------------------------------------------------------------------
+col_header, col_login = st.columns([5, 1])
+
+with col_header:
+    st.markdown("""
+    <div class="app-header">
+        <div class="header-content">
+            <div class="header-title">TanitAI HealthCare</div>
+            <div class="header-subtitle">Prédiction Intelligente de Réponse au Traitement FIV</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col_login:
+    st.write("")
+    st.write("")
+    if not st.session_state.logged_in:
+        if st.button("🔐 Connexion", key="login", type="primary"):
+            login()
+    else:
+        if st.button("🔓 Déconnexion", key="logout"):
+            logout()
+
+
+# If logged out
+if not st.session_state.logged_in:
+    st.warning("🔒 Veuillez vous connecter pour accéder au système de prédiction.")
+    st.info("Cliquez sur le bouton **Connexion** ci-dessus.")
+    st.stop()
+
+
+# -------------------------------------------------------------------------
+# 🔵 NAVIGATION
+# -------------------------------------------------------------------------
+col1, col2, col3 = st.columns(3)
+with col1:
+    btn_single = st.button("👤 Prédiction Individuelle", use_container_width=True)
+with col2:
+    btn_batch = st.button("📊 Prédiction par Lot", use_container_width=True)
+with col3:
+    btn_info = st.button("ℹ️ Informations Modèle", use_container_width=True)
+
+if "page" not in st.session_state:
+    st.session_state.page = "Single"
+
+if btn_single:
+    st.session_state.page = "Single"
+elif btn_batch:
+    st.session_state.page = "Batch"
+elif btn_info:
+    st.session_state.page = "Info"
+
+page = st.session_state.page
+
+
+# -------------------------------------------------------------------------
+# ℹ️ INFO CARD
+# -------------------------------------------------------------------------
+st.markdown("""
+<div class="info-card">
+    <h4>📊 À Propos du Système</h4>
+    <p>Ce système utilise l'intelligence artificielle pour prédire la réponse des patientes au traitement de FIV.</p>
+    <p><strong>Classes de Réponse :</strong></p>
+    <ul>
+        <li><b>Low</b> – Sous-réponse au traitement</li>
+        <li><b>Optimal</b> – Réponse normale</li>
+        <li><b>High</b> – Risque de syndrome d'hyperstimulation (OHSS)</li>
+    </ul>
+</div>
+""", unsafe_allow_html=True)
+
+
+# -------------------------------------------------------------------------
+# API CONFIG
+# -------------------------------------------------------------------------
 API_URL = "http://localhost:5000"
 
-
-def check_api_health() -> bool:
-    """Vérifie si l'API est accessible"""
+def check_api_health():
     try:
-        response = requests.get(f"{API_URL}/api/health", timeout=5)
-        return response.status_code == 200
+        r = requests.get(f"{API_URL}/api/health", timeout=5)
+        return r.status_code == 200
     except:
         return False
 
-
-def predict_response(patient_data: Dict[str, Any]) -> Dict[str, Any]:
-    """Appelle l'API pour obtenir une prédiction"""
+def predict_response(data):
     try:
-        response = requests.post(
-            f"{API_URL}/api/predict",
-            json=patient_data,
-            timeout=30
-        )
-        return response.json()
+        r = requests.post(f"{API_URL}/api/predict", json=data, timeout=30)
+        return r.json()
     except Exception as e:
-        return {'success': False, 'error': str(e)}
+        return {"success": False, "error": str(e)}
 
 
-def create_probability_chart(probabilities: Dict[str, float]) -> go.Figure:
-    """Crée un graphique des probabilités"""
-    classes = list(probabilities.keys())
-    values = list(probabilities.values())
-    
-    colors = {
-        'low': '#667eea',
-        'optimal': '#06D6A0',
-        'high': '#F77F00'
-    }
-    
-    fig = go.Figure(data=[
-        go.Bar(
-            x=classes,
-            y=values,
-            marker=dict(
-                color=[colors.get(c, '#667eea') for c in classes],
-                line=dict(color='white', width=2)
-            ),
-            text=[f'{v*100:.1f}%' for v in values],
-            textposition='outside',
-            hovertemplate='<b>%{x}</b><br>Probability: %{y:.1%}<extra></extra>'
-        )
-    ])
-    
+# -------------------------------------------------------------------------
+# VISUALIZATION FUNCTIONS
+# -------------------------------------------------------------------------
+def create_probability_chart(proba):
+    fig = go.Figure(go.Bar(
+        x=list(proba.keys()),
+        y=list(proba.values()),
+        text=[f"{v*100:.1f}%" for v in proba.values()],
+        textposition="outside",
+        marker_color=["#bccefb", "#d094ea", "#333333"]
+    ))
     fig.update_layout(
-        title=dict(
-            text='Response Probability Distribution',
-            font=dict(size=20, color='#333')
-        ),
-        xaxis_title='Response Class',
-        yaxis_title='Probability',
-        yaxis=dict(tickformat='.0%', range=[0, 1]),
-        height=400,
-        template='plotly_white',
-        showlegend=False,
-        margin=dict(t=80, b=50, l=50, r=50)
+        height=350,
+        template="plotly_white",
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        font=dict(color="#000000", size=12)
     )
-    
     return fig
 
-
-def create_gauge_chart(confidence: float) -> go.Figure:
-    """Crée un graphique gauge pour la confiance"""
+def create_gauge_chart(confidence):
     fig = go.Figure(go.Indicator(
-        mode="gauge+number+delta",
+        mode="gauge+number",
         value=confidence * 100,
-        domain={'x': [0, 1], 'y': [0, 1]},
-        title={'text': "Confidence Score", 'font': {'size': 24, 'color': '#333'}},
-        delta={'reference': 80, 'suffix': '%'},
         gauge={
-            'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-            'bar': {'color': "#667eea"},
-            'bgcolor': "white",
-            'borderwidth': 2,
-            'bordercolor': "gray",
-            'steps': [
-                {'range': [0, 60], 'color': '#ffcccb'},
-                {'range': [60, 80], 'color': '#ffe6cc'},
-                {'range': [80, 100], 'color': '#ccffcc'}
+            "axis": {"range": [0, 100]},
+            "bar": {"color": "#d094ea"},
+            "steps": [
+                {"range": [0, 60], "color": "#ffcccc"},
+                {"range": [60, 80], "color": "#fff2cc"},
+                {"range": [80, 100], "color": "#ccffcc"},
             ],
-            'threshold': {
-                'line': {'color': "red", 'width': 4},
-                'thickness': 0.75,
-                'value': 90
-            }
-        }
+        },
     ))
-    
     fig.update_layout(
         height=300,
-        margin=dict(t=50, b=0, l=50, r=50),
-        paper_bgcolor="rgba(0,0,0,0)",
-        font={'color': "#333", 'family': "Arial"}
+        font=dict(color="#000000")
     )
-    
     return fig
 
 
+# -------------------------------------------------------------------------
+# MAIN APPLICATION
+# -------------------------------------------------------------------------
 def main():
-    # En-tête principal
-    st.markdown("""
-        <div class="main-header">
-            <h1>🔬 IVF Patient Response Predictor</h1>
-            <p>AI-Powered Clinical Decision Support System</p>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    # Vérifier la connexion API
-    api_status = check_api_health()
-    
-    if not api_status:
-        st.error("⚠️ **API Server Offline** - Please ensure the Flask backend is running on port 5000")
-        st.code("python app.py", language="bash")
+    api_ok = check_api_health()
+    if not api_ok:
+        st.error("❌ API hors ligne - Veuillez démarrer le backend Flask.")
         st.stop()
-    
-    # Sidebar - Informations et navigation
-    with st.sidebar:
-        st.image("https://img.icons8.com/fluency/96/000000/medical-doctor.png", width=80)
-        st.title("📋 Navigation")
-        
-        page = st.radio(
-            "Select Mode",
-            ["Single Patient Prediction", "Batch Prediction", "Model Information"],
-            label_visibility="collapsed"
-        )
-        
-        st.markdown("---")
-        
-        st.markdown("""
-        ### 📊 About
-        This system uses machine learning to predict patient response 
-        to IVF treatment based on clinical parameters.
-        
-        **Response Classes:**
-        - 🔵 **Low**: Under-response
-        - 🟢 **Optimal**: Normal response  
-        - 🟠 **High**: Over-response (OHSS risk)
-        """)
-        
-        st.markdown("---")
-        st.success("✅ API Connected")
-    
-    # ========================================================================
-    # PAGE 1: Single Patient Prediction
-    # ========================================================================
-    if page == "Single Patient Prediction":
-        st.markdown("## 🎯 Single Patient Analysis")
-        
+
+    st.success("✅ API Connectée")
+
+    # ---------------------------------------------------------
+    # PAGE 1 — PRÉDICTION INDIVIDUELLE
+    # ---------------------------------------------------------
+    if page == "Single":
+        st.subheader("🎯 Analyse Patiente Individuelle")
+
         col1, col2 = st.columns(2)
-        
         with col1:
-            st.markdown("### 👤 Patient Demographics")
-            age = st.number_input(
-                "Age (years)",
-                min_value=18,
-                max_value=50,
-                value=32,
-                help="Patient's age at treatment"
-            )
-            
-            cycle_number = st.number_input(
-                "Cycle Number",
-                min_value=1,
-                max_value=10,
-                value=1,
-                help="IVF cycle attempt number"
-            )
-            
-            protocol = st.selectbox(
-                "Stimulation Protocol",
-                ["agonist", "flex anta", "fix anta"],
-                help="Type of ovarian stimulation protocol"
-            )
-        
+            age = st.number_input("Âge", 18, 50, 32)
+            cycle = st.number_input("Numéro de Cycle", 1, 10, 1)
+            protocol = st.selectbox("Protocole de Stimulation", ["agonist", "flex anta", "fix anta"])
+
         with col2:
-            st.markdown("### 🧬 Clinical Parameters")
-            amh = st.number_input(
-                "AMH (ng/mL)",
-                min_value=0.0,
-                max_value=20.0,
-                value=2.5,
-                step=0.1,
-                help="Anti-Müllerian Hormone level"
-            )
-            
-            afc = st.number_input(
-                "AFC (count)",
-                min_value=0,
-                max_value=50,
-                value=15,
-                help="Antral Follicle Count"
-            )
-            
-            n_follicles = st.number_input(
-                "Number of Follicles",
-                min_value=0,
-                max_value=50,
-                value=15,
-                help="Total follicle count"
-            )
-            
-            e2_day5 = st.number_input(
-                "E2 Day 5 (pg/mL)",
-                min_value=0.0,
-                max_value=5000.0,
-                value=300.0,
-                step=10.0,
-                help="Estradiol level on day 5 of stimulation"
-            )
-        
-        st.markdown("---")
-        
-        # Bouton de prédiction centré
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            predict_button = st.button("🚀 Predict Response", use_container_width=True)
-        
-        if predict_button:
-            # Préparer les données
-            patient_data = {
-                'Age': age,
-                'Cycle_number': cycle_number,
-                'Protocol': protocol,
-                'AMH': amh,
-                'N_Follicles': n_follicles,
-                'E2_day5': e2_day5,
-                'AFC': afc
+            amh = st.number_input("AMH (ng/mL)", 0.0, 20.0, 2.5)
+            afc = st.number_input("AFC", 0, 50, 15)
+            follicles = st.number_input("Nombre de Follicules", 0, 50, 15)
+            e2 = st.number_input("E2 Jour 5 (pg/mL)", 0.0, 5000.0, 300.0)
+
+        center = st.columns([1, 2, 1])[1]
+        with center:
+            run = st.button("🚀 Lancer la Prédiction", use_container_width=True)
+
+        if run:
+            payload = {
+                "Age": age,
+                "Cycle_number": cycle,
+                "Protocol": protocol,
+                "AMH": amh,
+                "N_Follicles": follicles,
+                "E2_day5": e2,
+                "AFC": afc,
             }
-            
-            with st.spinner('🔄 Analyzing patient data...'):
-                result = predict_response(patient_data)
-            
-            if result.get('success'):
-                predicted_class = result['predicted_class']
-                confidence = result['confidence']
-                probabilities = result['probabilities']
-                
-                # Afficher le résultat principal
-                st.markdown("---")
-                st.markdown("## 📊 Prediction Results")
-                
-                # Classe de style selon la prédiction
-                class_style = f"{predicted_class.lower()}-response"
-                
-                st.markdown(f"""
-                    <div class="prediction-result {class_style}">
-                        🎯 Predicted Response: <strong>{predicted_class.upper()}</strong>
-                    </div>
-                """, unsafe_allow_html=True)
-                
-                # Metrics en colonnes
-                col1, col2, col3 = st.columns(3)
-                
-                with col1:
-                    st.metric(
-                        "Confidence",
-                        f"{confidence*100:.1f}%",
-                        delta="High" if confidence > 0.8 else "Moderate" if confidence > 0.6 else "Low"
-                    )
-                
-                with col2:
-                    st.metric(
-                        "Low Risk",
-                        f"{probabilities.get('low', 0)*100:.1f}%"
-                    )
-                
-                with col3:
-                    st.metric(
-                        "OHSS Risk",
-                        f"{probabilities.get('high', 0)*100:.1f}%"
-                    )
-                
-                # Graphiques
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    st.plotly_chart(
-                        create_probability_chart(probabilities),
-                        use_container_width=True
-                    )
-                
-                with col2:
-                    st.plotly_chart(
-                        create_gauge_chart(confidence),
-                        use_container_width=True
-                    )
-                
-                # Interprétation et recommandations
-                st.markdown("---")
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    st.markdown("### 💡 Clinical Interpretation")
-                    st.info(result['interpretation'])
-                
-                with col2:
-                    st.markdown("### 📋 Recommendations")
-                    for i, rec in enumerate(result['recommendations'], 1):
-                        st.markdown(f"{i}. {rec}")
-            
-            else:
-                st.error(f"❌ Prediction Error: {result.get('error', 'Unknown error')}")
-    
-    # ========================================================================
-    # PAGE 2: Batch Prediction
-    # ========================================================================
-    elif page == "Batch Prediction":
-        st.markdown("## 📊 Batch Patient Analysis")
-        
-        st.info("📁 Upload a CSV file with patient data for batch predictions")
-        
-        uploaded_file = st.file_uploader(
-            "Choose CSV file",
-            type=['csv'],
-            help="CSV must contain: Age, AMH, N_Follicles, E2_day5, AFC"
-        )
-        
-        if uploaded_file is not None:
-            df = pd.read_csv(uploaded_file)
-            
-            st.markdown("### 📋 Uploaded Data Preview")
-            st.dataframe(df.head(10), use_container_width=True)
-            
-            st.markdown(f"**Total patients:** {len(df)}")
-            
-            if st.button("🚀 Run Batch Prediction", use_container_width=True):
-                with st.spinner('🔄 Processing batch predictions...'):
-                    patients = df.to_dict('records')
-                    
-                    try:
-                        response = requests.post(
-                            f"{API_URL}/api/predict/batch",
-                            json={'patients': patients},
-                            timeout=60
-                        )
-                        result = response.json()
-                        
-                        if result.get('success'):
-                            predictions = result['predictions']
-                            
-                            # Créer DataFrame des résultats
-                            results_df = df.copy()
-                            results_df['Predicted_Response'] = [p['predicted_class'] for p in predictions]
-                            results_df['Confidence'] = [p['confidence'] for p in predictions]
-                            
-                            st.success(f"✅ Processed {len(predictions)} patients successfully!")
-                            
-                            # Afficher les résultats
-                            st.markdown("### 📊 Prediction Results")
-                            st.dataframe(results_df, use_container_width=True)
-                            
-                            # Statistiques
-                            col1, col2, col3 = st.columns(3)
-                            
-                            response_counts = results_df['Predicted_Response'].value_counts()
-                            
-                            with col1:
-                                st.metric("Low Responders", response_counts.get('low', 0))
-                            with col2:
-                                st.metric("Optimal Responders", response_counts.get('optimal', 0))
-                            with col3:
-                                st.metric("High Responders", response_counts.get('high', 0))
-                            
-                            # Télécharger les résultats
-                            csv = results_df.to_csv(index=False)
-                            st.download_button(
-                                "📥 Download Results",
-                                csv,
-                                "predictions.csv",
-                                "text/csv",
-                                use_container_width=True
-                            )
-                        else:
-                            st.error(f"❌ Batch prediction failed: {result.get('error')}")
-                    
-                    except Exception as e:
-                        st.error(f"❌ Error: {str(e)}")
-    
-    # ========================================================================
-    # PAGE 3: Model Information
-    # ========================================================================
+
+            st.info("🔄 Analyse en cours…")
+            res = predict_response(payload)
+
+            if not res.get("success"):
+                st.error("❌ Échec de la prédiction")
+                return
+
+            st.subheader("📊 Résultats de la Prédiction")
+            c1, c2 = st.columns(2)
+            with c1:
+                st.metric("Classe Prédite", res["predicted_class"])
+            with c2:
+                st.metric("Niveau de Confiance", f"{res['confidence']*100:.1f}%")
+
+            c1, c2 = st.columns(2)
+            with c1:
+                st.plotly_chart(create_probability_chart(res["probabilities"]), use_container_width=True)
+            with c2:
+                st.plotly_chart(create_gauge_chart(res["confidence"]), use_container_width=True)
+
+            st.info(res.get("interpretation", ""))
+
+    # ---------------------------------------------------------
+    # PAGE 2 — PRÉDICTION PAR LOT
+    # ---------------------------------------------------------
+    elif page == "Batch":
+        st.subheader("📊 Prédiction par Lot")
+
+        file = st.file_uploader("Télécharger un fichier CSV", type=["csv"])
+
+        if file:
+            df = pd.read_csv(file)
+            st.dataframe(df, use_container_width=True)
+
+            required = ["Age", "AMH", "N_Follicles", "E2_day5", "AFC"]
+            missing = [c for c in required if c not in df.columns]
+
+            if missing:
+                st.error(f"❌ Colonnes manquantes : {missing}")
+                return
+
+            if st.button("🚀 Lancer la Prédiction par Lot"):
+                clean = df.dropna(subset=required)
+
+                r = requests.post(
+                    f"{API_URL}/api/predict/batch",
+                    json={"patients": clean.to_dict("records")},
+                    timeout=60
+                ).json()
+
+                if not r.get("success"):
+                    st.error("Échec de la prédiction par lot")
+                    return
+
+                preds = r["predictions"]
+                clean["Réponse_Prédite"] = [p["predicted_class"] for p in preds]
+                clean["Confiance"] = [p["confidence"] for p in preds]
+
+                st.success("✅ Prédiction par lot terminée")
+                st.dataframe(clean, use_container_width=True)
+
+                st.download_button("📥 Télécharger les Résultats", clean.to_csv(index=False), "predictions.csv")
+
+    # ---------------------------------------------------------
+    # PAGE 3 — INFORMATIONS MODÈLE
+    # ---------------------------------------------------------
     else:
-        st.markdown("## ℹ️ Model Information")
-        
+        st.subheader("ℹ️ Informations sur le Modèle")
+
         try:
-            response = requests.get(f"{API_URL}/api/model/info")
-            info = response.json()
-            
-            if info.get('success'):
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    st.markdown("### 🎯 Model Features")
-                    st.json(info['features'])
-                
-                with col2:
-                    st.markdown("### 📊 Response Classes")
-                    for cls in info['classes']:
-                        st.markdown(f"- **{cls.upper()}**")
-                
-                st.metric("Total Features", info['n_features'])
+            info = requests.get(f"{API_URL}/api/model/info").json()
+            if info.get("success"):
+                st.json(info)
             else:
-                st.error("Failed to load model information")
-        
+                st.error("Informations du modèle non disponibles.")
         except Exception as e:
-            st.error(f"Error: {str(e)}")
+            st.error(str(e))
 
 
+# -------------------------------------------------------------------------
+# RUN APP
+# -------------------------------------------------------------------------
 if __name__ == "__main__":
     main()
